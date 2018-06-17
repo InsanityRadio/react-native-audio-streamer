@@ -23,6 +23,9 @@ import com.google.android.exoplayer2.extractor.ExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
+import com.google.android.exoplayer2.source.dash.DashMediaSource;
+import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource;
+import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
@@ -73,15 +76,32 @@ public class RNAudioStreamerModule extends ReactContextBaseJavaModule implements
         this.player = ExoPlayerFactory.newSimpleInstance(reactContext, trackSelector, loadControl);
 
         // Create source
-        ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
-        DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(reactContext, getDefaultUserAgent(), bandwidthMeter);
-        Handler mainHandler = new Handler();
-        MediaSource audioSource = new ExtractorMediaSource(Uri.parse(urlString), dataSourceFactory, extractorsFactory, mainHandler, this);
+
+        MediaSource audioSource = this.getAudioSourceFromUri(urlString);
 
         // Start preparing audio
         player.prepare(audioSource);
         player.addListener(this);
+    }
+
+    MediaSource getAudioSourceFromUri(String urlString) {
+        Uri uri = Uri.parse(urlString);
+        String extension = "";
+        
+        DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(reactContext, getDefaultUserAgent(), bandwidthMeter);
+        Handler mainHandler = new Handler();
+        
+        if (urlString.lastIndexOf('.') > 0) extension = urlString.substring(urlString.lastIndexOf('.') + 1).toLowerCase();
+        
+        if (extension.equals("m3u8")) {
+            return new HlsMediaSource(uri, dataSourceFactory, mainHandler, null);
+        } else if (extension.equals("mpd")) {
+            return new DashMediaSource(uri, dataSourceFactory, new DefaultDashChunkSource.Factory(dataSourceFactory), mainHandler, null);
+        } else {
+            ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+            return new ExtractorMediaSource(uri, dataSourceFactory, extractorsFactory, mainHandler, this);
+        }
     }
 
     @ReactMethod public void play() {
