@@ -39,12 +39,13 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.List;
 
-public class RNAudioStreamerModule extends ReactContextBaseJavaModule implements ExoPlayer.EventListener, ExtractorMediaSource.EventListener{
+public class RNAudioStreamerModule extends ReactContextBaseJavaModule implements ExoPlayer.EventListener, ExtractorMediaSource.EventListener, AudioManager.OnAudioFocusChangeListener {
 
     // Player
     private SimpleExoPlayer player = null;
     private String status = "STOPPED";
     private ReactApplicationContext reactContext = null;
+    private Boolean wasPlayingBeforeFocusChange = false;
 
     public RNAudioStreamerModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -58,6 +59,7 @@ public class RNAudioStreamerModule extends ReactContextBaseJavaModule implements
     private static final String FINISHED = "FINISHED";
     private static final String BUFFERING = "BUFFERING";
     private static final String ERROR = "ERROR";
+
 
     @Override public String getName() {
         return "RNAudioStreamer";
@@ -98,8 +100,25 @@ public class RNAudioStreamerModule extends ReactContextBaseJavaModule implements
     }
 
     public void abandonAudioFocus() {
+        if (player == null) {
+            return;
+        }
         AudioManager audioManager = (AudioManager) reactContext.getSystemService(Context.AUDIO_SERVICE);
         audioManager.abandonAudioFocus(this);
+    }
+
+    public void onAudioFocusChange(int focusChange) {
+        if (player == null) {
+            return;
+        }
+        if (focusChange <= 0) {
+            this.wasPlayingBeforeFocusChange = status == PLAYING;
+            pause();
+        } else {
+            this.wasPlayingBeforeFocusChange && play();
+            this.wasPlayingBeforeFocusChange = false;
+
+        }
     }
 
     MediaSource getAudioSourceFromUri(String urlString) {
