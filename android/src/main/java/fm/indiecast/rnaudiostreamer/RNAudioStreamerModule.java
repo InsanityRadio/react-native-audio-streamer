@@ -81,7 +81,7 @@ public class RNAudioStreamerModule extends ReactContextBaseJavaModule implements
         MediaSource audioSource = this.getAudioSourceFromUri(urlString);
 
         // Start preparing audio
-        if (urlString.equals('')) {
+        if (urlString.equals("")) {
             abandonAudioFocus();
         } else {
             requestAudioFocus();
