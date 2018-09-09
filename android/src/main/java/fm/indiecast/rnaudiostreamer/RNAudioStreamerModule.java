@@ -1,5 +1,6 @@
 package fm.indiecast.rnaudiostreamer;
 
+import android.media.AudioManager;
 import android.os.Handler;
 import android.util.Log;
 import android.os.Build;
@@ -80,8 +81,24 @@ public class RNAudioStreamerModule extends ReactContextBaseJavaModule implements
         MediaSource audioSource = this.getAudioSourceFromUri(urlString);
 
         // Start preparing audio
+        if (urlString.equals('')) {
+            abandonAudioFocus();
+        } else {
+            requestAudioFocus();
+        }
+
         player.prepare(audioSource);
         player.addListener(this);
+    }
+
+    public void requestAudioFocus() {
+        AudioManager audioManager = (AudioManager) reactContext.getSystemService(Context.AUDIO_SERVICE);
+        audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+    }
+
+    public void abandonAudioFocus() {
+        AudioManager audioManager = (AudioManager) reactContext.getSystemService(Context.AUDIO_SERVICE);
+        audioManager.abandonAudioFocus(this);
     }
 
     MediaSource getAudioSourceFromUri(String urlString) {
