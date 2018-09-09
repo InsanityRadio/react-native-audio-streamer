@@ -115,7 +115,9 @@ public class RNAudioStreamerModule extends ReactContextBaseJavaModule implements
             this.wasPlayingBeforeFocusChange = status == PLAYING;
             pause();
         } else {
-            this.wasPlayingBeforeFocusChange && play();
+            if (this.wasPlayingBeforeFocusChange) {
+                play();
+            }
             this.wasPlayingBeforeFocusChange = false;
 
         }
