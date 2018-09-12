@@ -3,14 +3,14 @@
 //  RNAudioStreamer
 //
 //  Created by Victor Chan on 29/11/2016.
-//  Copyright © 2016 Victor Chan. All rights reserved.
+//  Ported with FRadioPlayer by Insanity Radio
+//  Copyright © 2016 Victor Chan and Insanity Radio. All rights reserved.
 //
 
 #import "RNAudioStreamer.h"
-#import "DOUAudioStreamer.h"
-#import "RNAudioFileURL.h"
 #import <AVFoundation/AVFoundation.h>
-#import "RCTEventDispatcher.h"
+#import <React/RCTEventDispatcher.h>
+#import "RNAudioStreamer-Swift.h"
 
 // Player status
 static NSString *PLAYING = @"PLAYING";
@@ -21,13 +21,10 @@ static NSString *BUFFERING = @"BUFFERING";
 static NSString *ERROR = @"ERROR";
 
 @interface RNAudioStreamer ()
-@property(strong, nonatomic) DOUAudioStreamer *player;
-@property(strong, nonatomic) RNAudioFileURL *douUrl;
+@property(strong, nonatomic) FRadioPlayer *player;
 @end
 
 @implementation RNAudioStreamer
-
-static void *kStatusKVOKey = &kStatusKVOKey;
 
 @synthesize bridge = _bridge;
 
@@ -49,15 +46,22 @@ RCT_EXPORT_METHOD(setUrl:(NSString *)urlString){
 
 
     NSURL *url = [[NSURL alloc] initWithString:urlString];
-    _douUrl = [[RNAudioFileURL alloc] init];
-    _douUrl.url = url;
-    _player = [[DOUAudioStreamer alloc] initWithAudioFile:_douUrl];
+    
+    _player = [FRadioPlayer getInstance];
+
+    [_player setRadioURLWith:url];
 
     // Status observer
+    
     [_player addObserver:self
-              forKeyPath:@"status"
+              forKeyPath:@"state"
                  options:NSKeyValueObservingOptionNew
-                 context:kStatusKVOKey];
+                 context:nil];
+
+    [_player addObserver:self
+              forKeyPath:@"playbackState"
+                 options:NSKeyValueObservingOptionNew
+                 context:nil];
 }
 
 RCT_EXPORT_METHOD(play) {
@@ -69,19 +73,21 @@ RCT_EXPORT_METHOD(pause) {
 }
 
 RCT_EXPORT_METHOD(seekToTime: (double)time) {
-   if(_player) [_player setCurrentTime:time];
+   // if(_player) [_player setCurrentTime:time];
 }
 
 RCT_EXPORT_METHOD(duration:(RCTResponseSenderBlock)callback){
-    callback(@[[NSNull null], @(_player && _player.duration && _player.duration > 0 ? _player.duration : 0)]);
+    // We don't have this data with FRadioPlayer
+    callback(@[[NSNull null], @(0)]);
 }
 
 RCT_EXPORT_METHOD(currentTime:(RCTResponseSenderBlock)callback){
-    callback(@[[NSNull null], @(_player && _player.currentTime && _player.currentTime > 0 ? _player.currentTime : 0)]);
+    // We don't have this data with FRadioPlayer
+    callback(@[[NSNull null], @(0)]);
 }
 
 RCT_EXPORT_METHOD(status:(RCTResponseSenderBlock)callback){
-    callback(@[[NSNull null], _player ? [self rnStatusFromDouStatus] : STOPPED]);
+    callback(@[[NSNull null], _player ? [self rnStatusFromFRadioStatus] : STOPPED]);
 }
 
 /**
@@ -91,7 +97,8 @@ RCT_EXPORT_METHOD(status:(RCTResponseSenderBlock)callback){
                       ofObject:(id)object
                         change:(NSDictionary *)change
                        context:(void *)context {
-    if (context == kStatusKVOKey) {
+    
+    if ([keyPath isEqualToString:@"state"] || [keyPath isEqualToString:@"playbackState"]) {
         [self performSelector:@selector(statusChanged)
                      onThread:[NSThread mainThread]
                    withObject:nil
@@ -106,29 +113,31 @@ RCT_EXPORT_METHOD(status:(RCTResponseSenderBlock)callback){
 
 - (void)statusChanged {
     [self.bridge.eventDispatcher sendDeviceEventWithName:@"RNAudioStreamerStatusChanged"
-                                                    body: _player ? [self rnStatusFromDouStatus] : STOPPED];
+                                                    body: _player ? [self rnStatusFromFRadioStatus] : STOPPED];
 }
 
-- (NSString *)rnStatusFromDouStatus {
+- (NSString *)rnStatusFromFRadioStatus {
     NSString *statusString = STOPPED;
-    switch(_player.status){
-        case DOUAudioStreamerPlaying:
-            statusString = PLAYING;
+    
+    switch(_player.state) {
+        case FRadioPlayerStateError:
+            return ERROR;
+        case FRadioPlayerStateLoading:
+            return BUFFERING;
+        default:
             break;
-        case DOUAudioStreamerPaused:
-            statusString = PAUSED;
+    }
+    
+    switch(_player.playbackState){
+        case FRadioPlaybackStatePlaying:
+            return PLAYING;
             break;
-        case DOUAudioStreamerIdle:
-            statusString = STOPPED;
+        case FRadioPlaybackStatePaused:
+            return PAUSED;
             break;
-        case DOUAudioStreamerFinished:
-            statusString = FINISHED;
-            break;
-        case DOUAudioStreamerBuffering:
-            statusString = BUFFERING;
-            break;
-        case DOUAudioStreamerError:
-            statusString = ERROR;
+        case FRadioPlaybackStateStopped:
+            return STOPPED;
+        default:
             break;
     }
     return statusString;
@@ -137,7 +146,8 @@ RCT_EXPORT_METHOD(status:(RCTResponseSenderBlock)callback){
 - (void)killPlayer{
   if (!_player) return;
   [_player stop];
-  [_player removeObserver:self forKeyPath:@"status"];
+  [_player removeObserver:self forKeyPath:@"state"];
+  [_player removeObserver:self forKeyPath:@"playbackState"];
   _player = nil;
 }
 
