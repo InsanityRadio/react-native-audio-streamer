@@ -31,6 +31,7 @@
 		4EA3C7F71DED6DA700FF8C38 /* libRNAudioStreamer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNAudioStreamer.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EA3C7FA1DED6DA700FF8C38 /* RNAudioStreamer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNAudioStreamer.h; sourceTree = "<group>"; };
 		4EA3C7FB1DED6DA700FF8C38 /* RNAudioStreamer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNAudioStreamer.m; sourceTree = "<group>"; };
+		7D1D62A12149706000CEE9B6 /* RNAudioStreamer-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RNAudioStreamer-Bridging-Header.h"; sourceTree = "<group>"; };
 		7D6FD434214923020001713E /* FRadioAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FRadioAPI.swift; sourceTree = "<group>"; };
 		7D6FD437214923080001713E /* FRadioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FRadioPlayer.swift; sourceTree = "<group>"; };
 		7D6FD439214923100001713E /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
@@ -68,6 +69,7 @@
 			children = (
 				4EA3C7FA1DED6DA700FF8C38 /* RNAudioStreamer.h */,
 				4EA3C7FB1DED6DA700FF8C38 /* RNAudioStreamer.m */,
+				7D1D62A12149706000CEE9B6 /* RNAudioStreamer-Bridging-Header.h */,
 				7D6FD434214923020001713E /* FRadioAPI.swift */,
 				7D6FD437214923080001713E /* FRadioPlayer.swift */,
 				7D6FD439214923100001713E /* Reachability.swift */,
@@ -252,7 +254,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "RNAudioStreamer/FRadioPlayer-Bridging-Header.h";
+				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "RNAudioStreamer/RNAudioStreamer-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
@@ -270,7 +272,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "RNAudioStreamer/FRadioPlayer-Bridging-Header.h";
+				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "RNAudioStreamer/RNAudioStreamer-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 			};
 			name = Release;

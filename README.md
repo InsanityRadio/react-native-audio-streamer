@@ -1,18 +1,24 @@
-# react-native-audio-streamer
+# <img src="https://raw.githubusercontent.com/InsanityRadio/OnAirController/master/doc/headphones_dark.png" align="left" height=48 /> react-native-audio-streamer
 
-A react-native audio streaming module which works on both iOS & Android
+A react-native audio streaming module which works on both iOS & Android, designed for live radio playback.
 
-iOS streaming is based on [DOUAudioStreamer](https://github.com/douban/DOUAudioStreamer)
+The module supports DASH and HLS natively on Android, and HLS natively on iOS. It also supports more traditional Icecast streams on all platforms.
+
+iOS streaming is based on [FRadioPlayer](https://github.com/fethica/FRadioPlayer)
 
 Android streaming is based on [ExoPlayer](https://github.com/google/ExoPlayer)
 
+### Why?
+
+This custom version of react-native-audio-streamer was built for Insanity Radio's open source radio player. We needed support for adaptive streaming to provide resilience to weird network conditions. 
+
+The original code was taken from indiecastfm's [module of the same name](https://github.com/indiecastfm/react-native-audio-streamer), but is not backwards compatible.
+
+This module makes no effort to support metadata. We're loading now playing information over WebSocket 
+
 ## Installation
 
-`npm install react-native-audio-streamer --save`
-
-** For react-native version < 0.40.0 install react-native-audio-streamer@0.0.9 **
-
-`npm install react-native-audio-streamer@0.0.9 --save`
+`npm install https://github.com/InsanityRadio/react-native-audio-streamer --save`
 
 Then run the following command to link to iOS & Android project
 
@@ -25,16 +31,9 @@ Then run the following command to link to iOS & Android project
 ```javascript
 import RNAudioStreamer from 'react-native-audio-streamer';
 
-RNAudioStreamer.setUrl('http://lacavewebradio.chickenkiller.com:8000/stream.mp3')
+RNAudioStreamer.setUrl('https://scdnc.insanityradio.com/dash/hls/insanity/index.m3u8')
 RNAudioStreamer.play()
 RNAudioStreamer.pause()
-RNAudioStreamer.seekToTime(16) //seconds
-RNAudioStreamer.duration((err, duration)=>{
- if(!err) console.log(duration) //seconds
-})
-RNAudioStreamer.currentTime((err, currentTime)=>{
- if(!err) console.log(currentTime) //seconds
-})
 
 // Player Status:
 // - PLAYING
@@ -73,9 +72,3 @@ _statusChanged(status) {
 }
 ```
 
-
-
-## Milestones
-
-- Audio caching
-- Buffering ratio
