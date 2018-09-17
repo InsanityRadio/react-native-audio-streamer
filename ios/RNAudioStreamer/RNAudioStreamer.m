@@ -33,6 +33,10 @@ RCT_EXPORT_MODULE();
 RCT_EXPORT_METHOD(setUrl:(NSString *)urlString){
 
     [self killPlayer];
+    
+    if ([urlString isEqualToString:@""]) {
+        return;
+    }
 
     //Audio session
     NSError *err;
