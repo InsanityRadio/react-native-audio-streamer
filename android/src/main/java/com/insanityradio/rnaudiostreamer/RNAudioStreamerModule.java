@@ -137,35 +137,17 @@ public class RNAudioStreamerModule extends ReactContextBaseJavaModule {
         if (musicService != null) musicService.seekToTime(time);
     }
 
-    @ReactMethod
-    public void currentTime(Promise promise) {
+    @ReactMethod public void currentTime(Callback callback) {
         try {
-            promise.resolve(musicService.getCurrentTime());
-        }
-        catch (Exception e) {
-            promise.reject("Error", e);
+            callback.invoke(null, musicService.getCurrentTime());
+        } catch (Exception e) {
+            callback.invoke(null, 0);
         }
     }
 
     @ReactMethod
-    public void status(Promise promise) {
-        try {
-            promise.resolve(musicService.getStatus());
-        }
-        catch (Exception e) {
-            promise.reject("Error", e);
-        }
+    public void status(Callback callback) {
+        callback.invoke(null, musicService.getStatus());
     }
-
-    @ReactMethod
-    public void duration(Promise promise) {
-        try {
-            promise.resolve(musicService.getDuration());
-        }
-        catch (Exception e) {
-            promise.reject("Error", e);
-        }
-    }
-
 
 }
