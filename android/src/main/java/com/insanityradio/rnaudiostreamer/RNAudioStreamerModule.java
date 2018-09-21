@@ -27,7 +27,6 @@ import com.facebook.react.bridge.ReadableType;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
-import com.facebook.react.views.imagehelper.ResourceDrawableIdHelper;
 
 import java.lang.Math;
 import java.lang.Exception;
@@ -45,7 +44,6 @@ public class RNAudioStreamerModule extends ReactContextBaseJavaModule {
     private MusicStreamerService.StatusUpdateListener updateListener = null;
     private MusicStreamerService.MetadataUpdateListener metadataListener = null;
 
-    private Thread artworkThread;
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
 
@@ -170,38 +168,4 @@ public class RNAudioStreamerModule extends ReactContextBaseJavaModule {
     }
 
 
-    private Bitmap loadArtwork(String url, boolean local) {
-        Bitmap bitmap = null;
-
-        try {
-            if(local) {
-
-                // Gets the drawable from the RN's helper for local resources
-                ResourceDrawableIdHelper helper = ResourceDrawableIdHelper.getInstance();
-                Drawable image = helper.getResourceDrawable(getReactApplicationContext(), url);
-
-                if(image instanceof BitmapDrawable) {
-                    bitmap = ((BitmapDrawable)image).getBitmap();
-                } else {
-                    bitmap = BitmapFactory.decodeFile(url);
-                }
-
-            } else {
-
-                // Open connection to the URL and decodes the image
-                URLConnection con = new URL(url).openConnection();
-                con.setConnectTimeout(2000);
-                con.setReadTimeout(10000);
-                con.connect();
-                InputStream input = con.getInputStream();
-                bitmap = BitmapFactory.decodeStream(input);
-                input.close();
-
-            }
-        } catch(IOException ex) {
-            Log.w("MusicStreamer", "Could not load the artwork", ex);
-        }
-        
-        return bitmap;
-    }
 }

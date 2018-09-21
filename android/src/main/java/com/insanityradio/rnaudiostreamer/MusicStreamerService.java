@@ -182,7 +182,6 @@ public class MusicStreamerService extends Service implements ExoPlayer.EventList
     }
 
     public void requestAudioFocus() {
-        AudioManager audioManager = (AudioManager) reactContext.getSystemService(Context.AUDIO_SERVICE);
         audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
     }
 
@@ -190,7 +189,6 @@ public class MusicStreamerService extends Service implements ExoPlayer.EventList
         if (player == null) {
             return;
         }
-        AudioManager audioManager = (AudioManager) reactContext.getSystemService(Context.AUDIO_SERVICE);
         audioManager.abandonAudioFocus(this);
     }
 
@@ -199,7 +197,7 @@ public class MusicStreamerService extends Service implements ExoPlayer.EventList
         String extension = "";
         
         DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(reactContext, getDefaultUserAgent(), bandwidthMeter);
+        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this, getDefaultUserAgent(), bandwidthMeter);
         Handler mainHandler = new Handler();
         
         if (urlString.lastIndexOf('.') > 0) extension = urlString.substring(urlString.lastIndexOf('.') + 1).toLowerCase();
