@@ -113,7 +113,7 @@ public class RNAudioStreamerModule extends ReactContextBaseJavaModule {
    
     // If we've set the URL before 
     public void musicServiceReady () {
-        if (musicService != null) {
+        if (musicService != null && tempUrl != null) {
             setUrl(tempUrl);
         }
     }

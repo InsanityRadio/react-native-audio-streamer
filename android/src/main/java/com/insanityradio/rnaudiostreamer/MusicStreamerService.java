@@ -229,14 +229,14 @@ public class MusicStreamerService extends Service implements ExoPlayer.EventList
         if(player != null) {
             player.setPlayWhenReady(true);
             registerReceiver(audioNoisyReceiver, new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY));
-            if (metaFromStream) {
+            /* if (metaFromStream) {
                 metadataUpdater.start(currentUrl);
             }
             notificationHandler.post(new Runnable() {
                 public void run() {
                     startForeground(N_ID, nb.build());
                 }
-            });
+            }); */
         }
     }
 
@@ -441,6 +441,9 @@ public class MusicStreamerService extends Service implements ExoPlayer.EventList
 
     public void setNotification(final String title, final String artist, final String album, final Bitmap artwork) {
 
+        if (true)
+            return; // TODO
+
         notificationHandler.post(new Runnable() {
 
             public void run() {
@@ -495,6 +498,9 @@ public class MusicStreamerService extends Service implements ExoPlayer.EventList
     }
 
     public void setNotificationButton(final boolean isPlaying) {
+
+        if (true)
+            return; // TODO
 
         notificationHandler.post(new Runnable() {
             public void run() {
