@@ -40,10 +40,11 @@ import java.util.List;
 public class RNAudioStreamerModule extends ReactContextBaseJavaModule {
 
     MusicStreamerService musicService = null;
+    private String tempUrl = null;
+    private Boolean playWhenReady = false;
     private ReactApplicationContext reactContext = null;
     private MusicStreamerService.StatusUpdateListener updateListener = null;
     private MusicStreamerService.MetadataUpdateListener metadataListener = null;
-
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
 
@@ -52,6 +53,7 @@ public class RNAudioStreamerModule extends ReactContextBaseJavaModule {
                 IBinder service) {
             MusicStreamerService.LocalBinder binder = (MusicStreamerService.LocalBinder) service;
             musicService = binder.getService();
+            musicServiceReady();
         }
 
         @Override
@@ -99,8 +101,21 @@ public class RNAudioStreamerModule extends ReactContextBaseJavaModule {
             musicService.setMetadataUpdateListener(this.metadataListener);
             musicService.prepare(urlString);
             musicService.enableMetadataFromStream(false);
+            if (playWhenReady) {
+                playWhenReady = false;
+                play();
+            }
+        } else {
+            tempUrl = urlString;
         }
         
+    }
+   
+    // If we've set the URL before 
+    public void musicServiceReady () {
+        if (musicService != null) {
+            setUrl(tempUrl);
+        }
     }
 
     @ReactMethod
@@ -117,12 +132,15 @@ public class RNAudioStreamerModule extends ReactContextBaseJavaModule {
     public void play() {
         if (musicService != null) {
             musicService.play();
+        } else {
+            playWhenReady = true;
         }
     }
 
     @ReactMethod
     public void pause() {
         if (musicService != null) musicService.pause();
+        playWhenReady = false;
     }
 
     @ReactMethod
@@ -130,6 +148,7 @@ public class RNAudioStreamerModule extends ReactContextBaseJavaModule {
         if (musicService != null) {
             musicService.stop();
         }
+        playWhenReady = false;
     }
 
     @ReactMethod
@@ -147,7 +166,11 @@ public class RNAudioStreamerModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void status(Callback callback) {
-        callback.invoke(null, musicService.getStatus());
+        try {
+            callback.invoke(null, musicService.getStatus());
+        } catch (Exception e) {
+            callback.invoke(null, "STOPPED");
+        }
     }
 
 }

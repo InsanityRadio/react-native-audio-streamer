@@ -24,6 +24,15 @@ Then run the following command to link to iOS & Android project
 
 `react-native link react-native-audio-streamer`
 
+### Android Steps
+
+You need to register the module's service. Edit your `android/app/src/main/AndroidManifest.xml` file and add the following:
+
+      <service
+        android:name="com.insanityradio.rnaudiostreamer.MusicStreamerService"
+        android:label="@string/app_name">
+      </service>
+
 ## Usage
 
 ### Basic
