@@ -1,5 +1,4 @@
-
-package fm.indiecast.rnaudiostreamer;
+package com.insanityradio.rnaudiostreamer;
 
 import java.util.ArrayList;
 import java.util.Arrays;

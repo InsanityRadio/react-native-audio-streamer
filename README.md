@@ -12,9 +12,9 @@ Android streaming is based on [ExoPlayer](https://github.com/google/ExoPlayer)
 
 This custom version of react-native-audio-streamer was built for Insanity Radio's open source radio player. We needed support for adaptive streaming to provide resilience to weird network conditions. 
 
-The original code was taken from indiecastfm's [module of the same name](https://github.com/indiecastfm/react-native-audio-streamer), but is not backwards compatible.
+The original code was taken from indiecastfm's [module of the same name](https://github.com/indiecastfm/react-native-audio-streamer), and from sveint's fork [react-native-music-streamer](https://github.com/sveint/react-native-music-streamer], to give us the "best of both worlds". 
 
-This module makes no effort to support metadata. We're loading now playing information over WebSocket 
+This module makes no effort to support metadata. We're loading now playing information over WebSocket so this is irrelevant for us. 
 
 ## Installation
 
@@ -71,4 +71,11 @@ _statusChanged(status) {
   // Your logic
 }
 ```
+
+
+### Credits
+
+https://github.com/indiecastfm/react-native-audio-streamer
+https://github.com/sveint/react-native-music-streamer
+
 

@@ -1,4 +1,4 @@
-package fm.indiecast.rnaudiostreamer;
+package com.insanityradio.rnaudiostreamer;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("fm.indiecast.rnaudiostreamer.test", appContext.getPackageName());
+        assertEquals("com.insanityradio.rnaudiostreamer.test", appContext.getPackageName());
     }
 }
