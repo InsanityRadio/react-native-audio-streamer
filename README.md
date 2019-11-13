@@ -81,6 +81,10 @@ _statusChanged(status) {
 }
 ```
 
+### Development
+
+Feel free to make use of this project in your own software. If you're developing 'native' iOS and Android apps, see the associated projects on both Android and iOS platforms, as this is where the core logic lies. The 'bridge' code should provide a rough interim guide as to how to implement the player, whilst we work on documentation and refactoring the code & structure. 
+
 
 ### Credits
 
