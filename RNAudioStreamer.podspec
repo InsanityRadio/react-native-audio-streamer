@@ -20,5 +20,4 @@ Pod::Spec.new do |s|
   s.swift_version = '4.0'
   s.dependency 'React'
 
-  s.static_framework = true
 end

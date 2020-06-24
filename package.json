@@ -1,6 +1,6 @@
 {
   "name": "react-native-audio-streamer",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "repository": {
     "type": "git",
     "url": "git@github.com:insanityradio/react-native-audio-streamer.git"

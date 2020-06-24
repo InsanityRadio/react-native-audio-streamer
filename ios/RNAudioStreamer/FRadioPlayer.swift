@@ -141,7 +141,7 @@ import AVFoundation
     open static let shared = FRadioPlayer()
     
     
-    @objc static func getInstance() -> FRadioPlayer {
+    @objc static open func getInstance() -> FRadioPlayer {
         return self.shared
     }
     
