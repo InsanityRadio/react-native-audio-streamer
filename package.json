@@ -1,6 +1,6 @@
 {
   "name": "react-native-audio-streamer",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "repository": {
     "type": "git",
     "url": "git@github.com:insanityradio/react-native-audio-streamer.git"
@@ -14,6 +14,7 @@
     "media",
     "player"
   ],
+  "description": "Simple live streaming audio in React Native",
   "author": "IndieCast.fm",
   "license": "MIT",
   "scripts": {
