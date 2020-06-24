@@ -20,7 +20,7 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.RatingCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.support.v7.app.NotificationCompat;
+import androidx.core.app.NotificationCompat;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -470,7 +470,7 @@ public class MusicStreamerService extends Service implements ExoPlayer.EventList
                 // Create media notification with the MediaMetadata
                 nb = new NotificationCompat.Builder(MusicStreamerService.this);
                 nb.setStyle(
-                    new NotificationCompat.MediaStyle()
+                    new androidx.media.app.NotificationCompat.MediaStyle()
                         .setMediaSession(mediaSession.getSessionToken())
                 );
 
@@ -516,7 +516,7 @@ public class MusicStreamerService extends Service implements ExoPlayer.EventList
 
                 // we need to set the style again due to setShowActionInCompactView...
                 nb.setStyle(
-                    new NotificationCompat.MediaStyle()
+                    new androidx.media.app.NotificationCompat.MediaStyle()
                         .setMediaSession(mediaSession.getSessionToken())
                         .setShowActionsInCompactView(0)
                 );
