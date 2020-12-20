@@ -152,6 +152,10 @@ public class MusicStreamerService extends Service implements ExoPlayer.EventList
     }
 
     public void prepare(String urlString) {
+        
+	if (urlString == null) {
+            urlString = "";
+        }
 
         this.currentUrl = urlString;
 
@@ -166,6 +170,7 @@ public class MusicStreamerService extends Service implements ExoPlayer.EventList
         TrackSelector trackSelector = new DefaultTrackSelector();
         LoadControl loadControl = new DefaultLoadControl();
         this.player = ExoPlayerFactory.newSimpleInstance(this, trackSelector, loadControl);
+
 
         // Create player source
         MediaSource audioSource = this.getAudioSourceFromUri(urlString);
@@ -540,3 +545,4 @@ public class MusicStreamerService extends Service implements ExoPlayer.EventList
     }
 
 }
+
