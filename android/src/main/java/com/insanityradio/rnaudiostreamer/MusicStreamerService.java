@@ -208,9 +208,11 @@ public class MusicStreamerService extends Service implements ExoPlayer.EventList
         if (urlString.lastIndexOf('.') > 0) extension = urlString.substring(urlString.lastIndexOf('.') + 1).toLowerCase();
         
         if (extension.equals("m3u8")) {
-            return new HlsMediaSource(uri, dataSourceFactory, mainHandler, null);
+            // return new HlsMediaSource(uri, dataSourceFactory, mainHandler, null);
+            return new HlsMediaSource.Factory(dataSourceFactory).createMediaSource(uri);
         } else if (extension.equals("mpd")) {
-            return new DashMediaSource(uri, dataSourceFactory, new DefaultDashChunkSource.Factory(dataSourceFactory), mainHandler, null);
+            // return new DashMediaSource(uri, dataSourceFactory, new DefaultDashChunkSource.Factory(dataSourceFactory), mainHandler, null);
+            return new DashMediaSource.Factory(dataSourceFactory).createMediaSource(uri);
         } else {
             ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
             return new ExtractorMediaSource(uri, dataSourceFactory, extractorsFactory, mainHandler, this);
@@ -348,7 +350,7 @@ public class MusicStreamerService extends Service implements ExoPlayer.EventList
     }
 
     @Override
-    public void onPositionDiscontinuity() {}
+    public void onPositionDiscontinuity(int reason) {}
 
     @Override
     public void onLoadingChanged(boolean isLoading) {
@@ -376,7 +378,7 @@ public class MusicStreamerService extends Service implements ExoPlayer.EventList
     }
 
     @Override
-    public void onTimelineChanged(Timeline timeline, Object manifest) {}
+    public void onTimelineChanged(Timeline timeline, Object manifest, int reason) {}
 
     @Override
     public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {}
